@@ -14,113 +14,82 @@ def copytree(src, dst, symlinks=False, ignore=None):
             if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
                 shutil.copy2(s, d)
 
-def install():
-    def slowprint(s):
+def slowprint(s):
         for c in s + '\n':
             sys.stdout.write(c)
             sys.stdout.flush()
             time.sleep(3. / 100)
-    def setup():
-        major = sys.version_info.major
-        minor = sys.version_info.minor
+
+#Global Vars
+pwdold = None
+pwdnew = None
+dirPath = None
+major = sys.version_info.major
+minor = sys.version_info.minor
+global pwdinit
+global pwddesktop
+global config
+global confloc
+#pwdinit = "%s/__init__.py"%pwdnew
+#pwddesktop = "%s/sandsploit.desktop"%pwdnew
+
+#Config Text
+
+
+
+class install:
+    def setup(self,pwdnew,pwddesktop,pwdinit,config,confloc):
+        if os.path.isdir(pwdnew):
+            pass
+        else:
+            os.mkdir(pwdnew)
         py = ("/usr/lib/python%s.%s"%(major,minor))
         os.mkdir(py+"/ssf")
         src = "docs/ssf/"
         dst = py+"/ssf/"
         copytree(src,dst)
-        copy_tree("project/",path)
-        os.symlink("/opt/sandsploit/__init__.py","/usr/bin/sandsploit")
-        os.chmod("/opt/sandsploit/__init__.py",0o755)
-        shutil.copy("/opt/sandsploit/sandsploit.desktop","/usr/share/applications/sandsploit.desktop")
-        cp = "/opt/sandsploit/module"
+        copy_tree("project/",pwdnew)
+        os.symlink(pwdinit,"/usr/bin/sandsploit")
+        os.chmod(pwdinit,0o755)
+        shutil.copy(pwddesktop,"/usr/share/applications/sandsploit.desktop")
+        cp = "%s/module"%pwdnew
         for root, dirs, files in os.walk(cp):
             for d in dirs:
                 os.chmod(os.path.join(root, d),0o755)
             for f in files:
                 os.chmod(os.path.join(root, f), 0o755)
         os.system("python3 -m pip install -r docs/requirements.txt")
+        f = open(confloc,'w')
+        f.write(config)
+        f.close()
         
         print ("Installation completed successfully.....")
-    path = "/opt/sandsploit"
-    exist =  os.path.isdir(path) 
-    if not exist:
-        setup()
-    else:
-        uninstall()
-        setup()
+
+    def uninstall(self,dirPath):
+        exist = os.path.isdir(dirPath) 
+        major = sys.version_info.major
+        minor = sys.version_info.minor
+        py = ("/usr/lib/python%s.%s"%(major,minor))
+        ppp = py+"/ssf/"
+        exist = os.path.isdir(dirPath)
+        if exist :
+            
+            
+            shutil.rmtree(ppp)
+            shutil.rmtree(dirPath)
+            os.remove('/usr/bin/sandsploit')
+            os.remove("/usr/share/applications/sandsploit.desktop")
+            print ("Uninstalled...")
+            return None        
+        else:
+            print ("Sandsploit is not installed.....")
 
 
-
-def uninstall():
-    dirPath = "/opt/sandsploit/"
-    exist = os.path.isdir(dirPath) 
-    major = sys.version_info.major
-    minor = sys.version_info.minor
-    py = ("/usr/lib/python%s.%s"%(major,minor))
-    ppp = py+"/ssf/"
-    exist = os.path.isdir(dirPath)
-    if exist :
-        
-        
-        shutil.rmtree(ppp)
-        shutil.rmtree(dirPath)
-        os.remove('/usr/bin/sandsploit')
-        os.remove("/usr/share/applications/sandsploit.desktop")
-        print ("Uninstalled...")
-        return None        
-    else:
-        print ("Sandsploit is not installed.....")
 
 def print_usage():
     print ('''usage :
     [!] - python3 setup.py install            Start installation
     [!] - python3 setup.py uninstall          Start uninstallation''')
-def termux():
-  
-    lpath = "/data/data/com.termux/files/usr/opt/"
-    ex = os.path.isdir(lpath)
-    if ex == False:
-        os.mkdir("/data/data/com.termux/files/usr/opt/")
-  
-    os.mkdir("/data/data/com.termux/files/usr/opt/sandsploit")
-    path = '/data/data/com.termux/files/usr/opt/sandsploit'
-    copy_tree("project/",path)
-    os.symlink("/data/data/com.termux/files/usr/opt/sandsploit/__init__.py","/data/data/com.termux/files/usr/bin/sandsploit")
-    os.chmod("/data/data/com.termux/files/usr/opt/sandsploit/__init__.py",0o755)
-    #shutil.copy("/opt/sandsploit/sandsploit.desktop","/usr/share/applications/sandsploit.desktop")
-    cp = "/data/data/com.termux/files/usr/opt/sandsploit/module"
-    for root, dirs, files in os.walk(cp):
-        for d in dirs:
-            os.chmod(os.path.join(root, d),0o755)
-        for f in files:
-            os.chmod(os.path.join(root, f), 0o755)
-    os.system("python3 -m pip install -r docs/requirements.txt")
-    major = sys.version_info.major
-    minor = sys.version_info.minor
-    py = ("/data/data/com.termux/files/usr/lib/python%s.%s"%(major,minor))
-    os.mkdir(py+"/ssf")
-    src = "docs/ssf/"
-    dst = py+"/ssf/"
-    copytree(src,dst)
-    print ("Installation completed successfully.....")
-
-def termuxUn():
-    dirPath = "/data/data/com.termux/files/usr/opt/sandsploit"
-    exist = os.path.isdir(dirPath) 
-    major = sys.version_info.major
-    minor = sys.version_info.minor
-    py = ("/data/data/com.termux/files/usr/lib/python%s.%s"%(major,minor))
-    ppp = py+"/ssf/"
-    if exist :
-        
-        shutil.rmtree(ppp)
-        shutil.rmtree(dirPath)
-        os.remove('/data/data/com.termux/files/usr/bin/sandsploit')
-        
-        print ("Uninstalled...")
-        return None        
-    else:
-        print ("Sandsploit is not installed.....")
 def main():
 
     uname =  subprocess.check_output("uname -o", shell=True)
@@ -128,20 +97,25 @@ def main():
         print_usage()
         sys.exit(1)
     elif sys.argv[1] == "install":
+        pwdnew = input("Enter Installation Location : ")
+        pwdinit = "%s/__init__.py"%pwdnew
+        pwddesktop = "%s/sandsploit.desktop"%pwdnew
+        config ="[DEFAULT]\nSANDPWD='%s'"%pwdnew
+        confloc = "%s/lib/config.ini"%pwdnew
+        if os.geteuid() != 0:
+            sys.exit("\n Run only with root access \n")
+        install.setup(None,pwdnew,pwddesktop,pwdinit,config,confloc)
         
-        if 'Android' in str(uname):
-            termux()
-        else:
-            if os.geteuid() != 0:
-                sys.exit("\n Run only with root access \n")
-            install()
+        print(pwdnew)
     elif sys.argv[1] == "uninstall":
-        if 'Android' in str(uname):
-            termuxUn()
-        else:
-            if os.geteuid() != 0:
-                sys.exit("\n Run only with root access \n")
-            uninstall()
+        if os.geteuid() != 0:
+            sys.exit("\n Run only with root access \n")
+        dirPath = os.readlink('/usr/bin/sandsploit')
+        dirPath = dirPath[0:-11]
+        #print(dirPath)
+        ui = install
+        ui.uninstall(None,dirPath)
+
     else:
         print_usage()
         sys.exit(1)
