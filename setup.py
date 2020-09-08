@@ -114,15 +114,17 @@ def main():
         pwddesktop = "%s/sandsploit.desktop"%pwdnew
         config ="[DEFAULT]\nSANDPWD='%s'"%pwdnew
         confloc = "%s/lib/config.ini"%pwdnew
-        if os.geteuid() != 0:
-            sys.exit("\n Run only with root access \n")
+        if 'Android' not in str(uname):
+            if os.geteuid() != 0:
+                sys.exit("\n Run only with root access \n")
         install.setup(None,pwdnew,pwddesktop,pwdinit,config,confloc)
         
-        print(pwdnew)
     elif sys.argv[1] == "uninstall":
-        if os.geteuid() != 0:
-            sys.exit("\n Run only with root access \n")
-        dirPath = os.readlink('/usr/bin/sandsploit')
+        if 'Android' not in str(uname):
+            if os.geteuid() != 0:
+                sys.exit("\n Run only with root access \n")
+
+        dirPath = os.readlink(locbin)
         dirPath = dirPath[0:-11]
         #print(dirPath)
         ui = install
