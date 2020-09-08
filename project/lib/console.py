@@ -89,7 +89,7 @@ def console():
                             print ("enter help to see how to use this command")
                         else:
                             run = option.split("run ")[1]
-                            run2 = path+run
+                            run2 = "%s/%s"%(path,run)
                             #exec(open(run2).read())
                             exst = os.path.isfile(run2) 
                             if exst:
