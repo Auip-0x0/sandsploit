@@ -18,7 +18,9 @@ from datetime import datetime
 
 ##################################################
 config = configparser.ConfigParser()
-config.read('config.ini')
+confloc = os.readlink('/usr/bin/sandsploit')
+confloc = confloc[0:-11]+"/lib/config.ini"
+config.read(confloc)
 pwd = config["DEFAULT"]
 SANDpwd = pwd["SANDPWD"]
 
