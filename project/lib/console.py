@@ -17,8 +17,14 @@ from core.rsmaker import RSMaker
 from datetime import datetime
 
 ##################################################
+environ = os.environ['SHELL']
+environ = environ.split('/')
+environ = environ[0:-2]
+environ = '/'.join(environ)
+locbin = environ+'/bin/sandsploit'
+
 config = configparser.ConfigParser()
-confloc = os.readlink('/usr/bin/sandsploit')
+confloc = os.readlink(locbin)
 confloc = confloc[0:-11]+"/lib/config.ini"
 config.read(confloc)
 pwd = config["DEFAULT"]
