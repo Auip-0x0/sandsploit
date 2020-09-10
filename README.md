@@ -6,9 +6,6 @@
 
 The Sandsploit Framework is released under a ![Apache 2 License](https://img.shields.io/github/license/auip-0x0/sandsploit)
 
-This is a Good Tool For Pentesters
-
-you can use this Framework in all *nix os such as GNU & BSD
 ## PreView
 <p align="center">
   <img src="docs/PreView.gif" alt="Master">

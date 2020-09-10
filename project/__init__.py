@@ -27,7 +27,7 @@ def main():
     print(chr(27)+'[2j')
     print('\033c')
     print('\x1bc')
-    #Check Device
+    """
     uname = subprocess.check_output("uname -o", shell=True)
     if 'Android' in str(uname):
         banner()
@@ -35,8 +35,9 @@ def main():
     else:
         banner()
         console()
-
-
+    """
+    banner()
+    console()
 if __name__ == "__main__":
     main()
     
